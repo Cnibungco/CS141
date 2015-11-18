@@ -1,0 +1,45 @@
+#!/bin/bash
+
+array=("GenerateScore.java" "Temperature.java")
+toExecute="GenerateScore"
+SRC_DIRECTORY=src
+
+cd $SRC_DIRECTORY
+
+#in src
+
+#delete all class files
+rm -rf *.class
+
+#in src folder
+for i in ${array[@]}
+do
+	echo "Checking if $i exists and is readable..."
+	if [ -e $i ] && [ -r $i ]; then
+		echo "$i exists and is readable "
+	else
+		echo "$i either does not exist or is not readable...exiting"
+		exit
+	fi
+done
+
+
+#compiling
+for i in ${array[@]}
+do
+	echo "Compiling $i..."
+	javac -classpath "." "$i"
+done
+
+#execute the generatescore
+cd ..
+if [ "$#" -eq 0 ]; then
+	echo "zero arguments entered...using data folder"
+	java -classpath "$SRC_DIRECTORY" "$toExecute"
+elif [ $1 = eval ]; then
+	echo "more than zero arguments entered...using eval folder"
+	java -classpath "$SRC_DIRECTORY" "$toExecute" $0
+else
+	echo "BAD ARGUMENTS"
+	exit
+fi
